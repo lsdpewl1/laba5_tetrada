@@ -452,7 +452,7 @@ namespace laba1
 
             Parser parser = new Parser(lexemes);
 
-            parser.Parse(dataGridView2);//*
+            parser.Parse(dataGridView2);//*b
 
 
 

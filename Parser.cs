@@ -13,6 +13,7 @@ namespace laba1
         private List<Lexeme> lexemes;
         private int position;
         public int counter;
+        public int flag;
         public List<LexemeType> expectedLexemes;
         public List<LexemeType> foundLexemes;
         public string str;
@@ -22,6 +23,7 @@ namespace laba1
             this.lexemes = lexemes;
             this.position = 0;
             this.counter = 0;
+            flag = lexemes.Count;
         }
 
         public void Parse(DataGridView dataGridView1)
@@ -33,15 +35,31 @@ namespace laba1
         {
             try
             {
-
+                //int flag = lexemes.Count;
                 int res = 0;
+
                 for (int u = position; u < lexemes.Count; u++)
+                {
+                    if (lexemes[u].Type == LexemeType.NewStr)
+                    {
+                        flag = u; 
+                        break;
+                    }
+                    else
+                    {
+                        flag = lexemes.Count;
+                    }
+
+                }
+
+                for (int u = position; u < flag; u++)
                 {
                     if (lexemes[u].Type == LexemeType.Keyword)
                     {
                         res = 1;
                         break;
                     }
+
                 }
 
                 if (res == 0)
@@ -76,7 +94,7 @@ namespace laba1
                     
                         dataGridView1.Rows.Add($"Cимвол '{lexemes[position].Token}', lexemes[position].StartPosition");
                         position++;
-                        counter++;
+                        counter++; 
                         DEF(dataGridView1);
                     }
 
@@ -103,7 +121,7 @@ namespace laba1
             try
             {
                 int res = 0;
-                for (int u = position; u < lexemes.Count; u++)
+                for (int u = position; u < flag; u++)
                 {
                     if (lexemes[u].Type == LexemeType.Delimiter)
                     {
@@ -168,7 +186,7 @@ namespace laba1
             try
             {
                 int res = 0;
-                for (int u = position; u < lexemes.Count; u++)
+                for (int u = position; u < flag; u++)
                 {
                     if (lexemes[u].Type == LexemeType.Identifier)
                     {
@@ -249,7 +267,7 @@ namespace laba1
             {
 
                 int res = 0;
-                for (int u = position; u < lexemes.Count; u++)
+                for (int u = position; u < flag; u++)
                 {
                     if (lexemes[u].Type == LexemeType.Colon)
                     {
@@ -313,7 +331,7 @@ namespace laba1
             try
             {
                 int res = 0;
-                for (int u = position; u < lexemes.Count; u++)
+                for (int u = position; u < flag; u++)
                 {
                     if (lexemes[u].Type == LexemeType.DataType)
                     {
@@ -382,7 +400,7 @@ namespace laba1
                     try
                     {
                         int res = 0;
-                        for (int u = position; u < lexemes.Count; u++)
+                        for (int u = position; u < flag; u++)
                         {
                             if (lexemes[u].Type == LexemeType.Equally)
                             {
@@ -556,7 +574,7 @@ namespace laba1
             {
 
                 int res = 0;
-                for (int u = position; u < lexemes.Count; u++)
+                for (int u = position; u < flag; u++)
                 {
                     if (lexemes[u].Type == LexemeType.Number)
                     {
@@ -622,7 +640,7 @@ namespace laba1
             {
 
                 int res = 0;
-                for (int u = position; u < lexemes.Count; u++)
+                for (int u = position; u < flag; u++)
                 {
                     if (lexemes[u].Type == LexemeType.Semicolon)
                     {
@@ -634,7 +652,7 @@ namespace laba1
 
                 if (res == 0)
                 {
-                    dataGridView1.Rows.Add($"Ожидалась точка с запятой", lexemes[position].StartPosition);
+                    dataGridView1.Rows.Add($"Ожидалась точка с запятой", lexemes[position-1].EndPosition + 1);
                     counter++;
                     END(dataGridView1);//?
                 }
@@ -677,6 +695,7 @@ namespace laba1
             }
             catch (ArgumentOutOfRangeException)
             {
+
                 dataGridView1.Rows.Add($"Неожиданный символ '\0'");
                 counter++;
             }
