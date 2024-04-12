@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace laba1
 {
-    public class Lexeme
+    internal class Lexeme
     {
         public int Code { get; set; }
         public LexemeType Type { get; set; }
@@ -26,19 +26,13 @@ namespace laba1
 
     public enum LexemeType
     {
-        //const MARKS:i32 = 100; 
-        Keyword,
-        Identifier,
-        Delimiter,
-        Colon,
-        DataType,
-        Equally,
-        Minus,
+        Letter,
         Plus,
-        Number,
+        Minus,
+        Mult,
+        Div,
+        Equal,
         Semicolon,
-        Invalid,
-        EndStr,
-        NewStr
+        Invalid
     }
 }

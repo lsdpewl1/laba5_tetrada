@@ -39,15 +39,17 @@ namespace laba1
         }
         public void Back()
         {
-            FastColoredTextBox tb = inputTextBox;
-            if (tb.UndoEnabled)
-                tb.Undo();
+           // FastColoredTextBox tb = inputTextBox;
+           
+            //if (inputTextBox.UndoEnabled)
+                inputTextBox.Undo();
+            
         }
         public void Next()
         {
-            FastColoredTextBox tb = inputTextBox;
-            if (tb.RedoEnabled)
-                tb.Redo();
+            //FastColoredTextBox tb = inputTextBox;
+            //if (inputTextBox.RedoEnabled)
+                inputTextBox.Redo();
         }
         public void In() { inputTextBox.Paste(); }
         public void Copy() { if (inputTextBox.SelectionLength > 0) { inputTextBox.Copy(); } }
@@ -214,8 +216,8 @@ namespace laba1
         private void SplitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
             // Обновление размеров элементов управления при изменении размера панелей
-            inputTextBox.Width = splitContainer1.Panel1.Width;
-            inputTextBox.Height = splitContainer1.Panel1.Height;
+            //inputTextBox.Width = splitContainer1.Panel1.Width;
+            //inputTextBox.Height = splitContainer1.Panel1.Height;
 
             //outputTextBox.Width = splitContainer1.Panel2.Width;
             //outputTextBox.Height = splitContainer1.Panel2.Height;
@@ -236,238 +238,166 @@ namespace laba1
 
         void start()
         {
-            string input = inputTextBox.Text;
 
-            Dictionary<LexemeType, int> lexemeCodes = new Dictionary<LexemeType, int>()
+                string input = inputTextBox.Text;
+
+                Dictionary<LexemeType, int> lexemeCodes = new Dictionary<LexemeType, int>()
     {
-        { LexemeType.Keyword, 1 },
-        { LexemeType.Identifier, 2 },
-        { LexemeType.Delimiter, 3 },
-        { LexemeType.Colon, 4 },
-        { LexemeType.DataType, 5 },
-        { LexemeType.Equally, 6 },
-        { LexemeType.Minus, 7 },
-        { LexemeType.Plus, 8 },
-        { LexemeType.Number, 9 },
-        { LexemeType.Semicolon, 10 },
-        { LexemeType.Invalid, 11 },
-        { LexemeType.EndStr, 12 },
-        { LexemeType.NewStr, 13 }
+        { LexemeType.Letter, 1 },
+        { LexemeType.Plus, 2 },
+        { LexemeType.Minus, 3 },
+        { LexemeType.Mult, 4 },
+        { LexemeType.Div, 5 },
+        { LexemeType.Equal, 6 },
+        { LexemeType.Semicolon, 7 },
+        { LexemeType.Invalid, 404 }
     };
 
-            string[] keywords = { "const" };
-            string[] delimiters = { " " };
-            string[] colons = { ":" };
-            string[] dataTypes = { "i32" };
-            string[] equallies = { "=" };
-            string[] pluses = { "+" };
-            string[] minuses = { "-" };
-            string[] semicolones = { ";" };
-            char[] endstrings = { '\r' };
-            char[] newstrings = { '\n' };
+                //string[] letters = { "const" };
+                string[] pluses = { "+" };
+                string[] minuses = { "-" };
+                string[] multes = { "*" };
+                string[] dives = { "/" };
+                string[] equals = { "=" };
+                string[] semicolons = { ";" };
 
 
-            List<Lexeme> lexemes = new List<Lexeme>();
+                List<Lexeme> lexemes = new List<Lexeme>();
 
-            int position = 0;
-            while (position < input.Length)
-            {
-                bool found = false;
-
-                //const
-                foreach (string keyword in keywords)
+                int position = 0;
+                while (position < input.Length)
                 {
-                    if (input.Substring(position).StartsWith(keyword))
+                    bool found = false;
+
+                    //=
+                    foreach (string op in equals)
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Keyword], LexemeType.Keyword, input, position, position + keyword.Length - 1));
-                        position += keyword.Length;
-                        found = true;
-                        break;
+                        if (input.Substring(position).StartsWith(op))
+                        {
+                            lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Equal], LexemeType.Equal, input, position, position + op.Length - 1));
+                            position += op.Length;
+                            found = true;
+                            break;
+                        }
                     }
-                }
 
-                if (found) continue;
+                    if (found) continue;
 
-                //:
-                foreach (string op in colons)
-                {
-                    if (input.Substring(position).StartsWith(op))
+                    //+
+                    foreach (string op in pluses)
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Colon], LexemeType.Colon, input, position, position + op.Length - 1));
-                        position += op.Length;
-                        found = true;
-                        break;
+                        if (input.Substring(position).StartsWith(op))
+                        {
+                            lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Plus], LexemeType.Plus, input, position, position + op.Length - 1));
+                            position += op.Length;
+                            found = true;
+                            break;
+                        }
                     }
-                }
 
-                if (found) continue;
+                    if (found) continue;
 
-                //data type
-                foreach (string dataType in dataTypes)
-                {
-                    if (input.Substring(position).StartsWith(dataType))
+                    //-
+                    foreach (string op in minuses)
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.DataType], LexemeType.DataType, input, position, position + dataType.Length - 1));
-                        position += dataType.Length;
-                        found = true;
-                        break;
+                        if (input.Substring(position).StartsWith(op))
+                        {
+                            lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Minus], LexemeType.Minus, input, position, position + op.Length - 1));
+                            position += op.Length;
+                            found = true;
+                            break;
+                        }
                     }
-                }
 
-                if (found) continue;
+                    if (found) continue;
 
-                //=
-                foreach (string op in equallies)
-                {
-                    if (input.Substring(position).StartsWith(op))
+                    //*
+                    foreach (string op in multes)
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Equally], LexemeType.Equally, input, position, position + op.Length - 1));
-                        position += op.Length;
-                        found = true;
-                        break;
+                        if (input.Substring(position).StartsWith(op))
+                        {
+                            lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Mult], LexemeType.Mult, input, position, position + op.Length - 1));
+                            position += op.Length;
+                            found = true;
+                            break;
+                        }
                     }
-                }
 
-                if (found) continue;
+                    if (found) continue;
 
-                //+
-                foreach (string op in pluses)
-                {
-                    if (input.Substring(position).StartsWith(op))
+                    //   /
+                    foreach (string op in dives)
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Equally], LexemeType.Plus, input, position, position + op.Length - 1));
-                        position += op.Length;
-                        found = true;
-                        break;
+                        if (input.Substring(position).StartsWith(op))
+                        {
+                            lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Div], LexemeType.Div, input, position, position + op.Length - 1));
+                            position += op.Length;
+                            found = true;
+                            break;
+                        }
                     }
-                }
 
-                if (found) continue;
+                    if (found) continue;
 
-                //-
-                foreach (string op in minuses)
-                {
-                    if (input.Substring(position).StartsWith(op))
+                    //;
+                    foreach (string op in semicolons)
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Equally], LexemeType.Minus, input, position, position + op.Length - 1));
-                        position += op.Length;
-                        found = true;
-                        break;
+                        if (input.Substring(position).StartsWith(op))
+                        {
+                            lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Semicolon], LexemeType.Semicolon, input, position, position + op.Length - 1));
+                            position += op.Length;
+                            found = true;
+                            break;
+                        }
                     }
-                }
 
-                if (found) continue;
+                    if (found) continue;
 
-                //;
-                foreach (string op in semicolones)
-                {
-                    if (input.Substring(position).StartsWith(op))
+                    //letter
+                    if (char.IsLetter(input[position]))
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Semicolon], LexemeType.Semicolon, input, position, position + op.Length - 1));
-                        position += op.Length;
-                        found = true;
-                        break;
+                        int start = position;
+                        while (position < input.Length && char.IsLetter(input[position]))
+                        {
+                            position++;
+                        }
+                        string identifier = input.Substring(start, position - start);
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Letter], LexemeType.Letter, input, start, position - 1));
                     }
-                }
 
-
-
-                if (found) continue;
-
-                //_
-                foreach (string delimiter in delimiters)
-                {
-                    if (input.Substring(position).StartsWith(delimiter))
+                    //error
+                    else
                     {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Delimiter], LexemeType.Delimiter, input, position, position + delimiter.Length - 1));
-                        position += delimiter.Length;
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) continue;
-
-                //  \0
-                foreach (char endstr in endstrings)
-                {
-                    if (input[position] == endstr)
-                    {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.EndStr], LexemeType.EndStr, input, position, position));
-                        position++;
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) continue;
-
-                //  \n
-                foreach (char newstr in newstrings)
-                {
-                    if (input[position] == newstr)
-                    {
-                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.NewStr], LexemeType.NewStr, input, position, position));
-                        position++;
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found) continue;
-
-                //name
-                if (char.IsLetter(input[position]))
-                {
-                    int start = position;
-                    while (position < input.Length && char.IsLetterOrDigit(input[position]))
-                    {
+                        string invalid = input[position].ToString();
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Invalid], LexemeType.Invalid, input, position, position));
                         position++;
                     }
-                    string identifier = input.Substring(start, position - start);
-                    lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Identifier], LexemeType.Identifier, input, start, position - 1));
                 }
-                //value
-                else if (char.IsDigit(input[position]))
+
+                label1.Text = "Кол-во ошибок: ";
+                dataGridView1.Rows.Clear();//*
+                dataGridView2.Rows.Clear();//*
+                richTextBox1.Text = "";
+
+                foreach (Lexeme lexeme in lexemes)
                 {
-                    int start = position;
-                    while (position < input.Length && char.IsDigit(input[position]))
-                    {
-                        position++;
-                    }
-                    string number = input.Substring(start, position - start);
-                    lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Number], LexemeType.Number, input, start, position - 1));
+                    dataGridView1.Rows.Add(lexeme.Code, lexeme.Type, lexeme.Token, lexeme.StartPosition, lexeme.EndPosition);
                 }
-                //error
-                else
+
+                Parser parser = new Parser(lexemes);
+                parser.Parse(dataGridView2);//*b
+
+                label1.Text += parser.counter;
+
+                if (parser.counter == 0)
                 {
-                    string invalid = input[position].ToString();
-                    lexemes.Add(new Lexeme(lexemeCodes[LexemeType.Invalid], LexemeType.Invalid, input, position, position));
-                    position++;
+                    dataGridView2.Rows.Add("Ошибок нет");//*
+                    parser.tetrada(richTextBox1);
+
                 }
-            }
-
-            dataGridView2.Rows.Clear();//*
-            dataGridView1.Rows.Clear();//*
-
-            Parser parser = new Parser(lexemes);
-
-            parser.Parse(dataGridView2);//*b
 
 
-
-            label1.Text = "Количество ошибок: " + parser.counter;
-            //correctString.Text = "" + parser.str;
-            if (parser.counter == 0)
-            {
-                dataGridView2.Rows.Add("Ошибок нет");//*
-                
-            }
-
-            foreach (Lexeme lexeme in lexemes)
-            {
-                dataGridView1.Rows.Add(lexeme.Code, lexeme.Type, lexeme.Token, lexeme.StartPosition, lexeme.EndPosition);
-            }
+            
         }
 
         private void buttonPlay_Click(object sender, EventArgs e)
@@ -526,6 +456,11 @@ namespace laba1
         }
 
         private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
