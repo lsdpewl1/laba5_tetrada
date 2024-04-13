@@ -33,6 +33,8 @@ namespace laba1
         Div,
         Equal,
         Semicolon,
+        SkobaOpen,
+        SkobaClose,
         Invalid
     }
 }

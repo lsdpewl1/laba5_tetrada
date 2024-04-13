@@ -28,6 +28,8 @@ namespace laba1
         private ToolStripLabel dateLabel;
         private ToolStripLabel timeLabel;
         private ToolStripLabel layoutLabel;
+
+                
         
         private void UpdateStatusLabels(object sender, EventArgs e)
         {
@@ -131,6 +133,11 @@ namespace laba1
             var timer = new System.Windows.Forms.Timer { Interval = 1000 };
             timer.Tick += UpdateStatusLabels;
             timer.Start();
+
+            dataGridView3.Visible = false;
+            //label1.Visible = true;
+            dataGridView2.Visible = true;
+            dataGridView1.Visible = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -250,6 +257,8 @@ namespace laba1
         { LexemeType.Div, 5 },
         { LexemeType.Equal, 6 },
         { LexemeType.Semicolon, 7 },
+        { LexemeType.SkobaOpen, 8 },
+        { LexemeType.SkobaClose, 9 },
         { LexemeType.Invalid, 404 }
     };
 
@@ -260,9 +269,11 @@ namespace laba1
                 string[] dives = { "/" };
                 string[] equals = { "=" };
                 string[] semicolons = { ";" };
+            string[] skobaopens = { "(" };
+            string[] skobacloses = { ")" };
 
 
-                List<Lexeme> lexemes = new List<Lexeme>();
+            List<Lexeme> lexemes = new List<Lexeme>();
 
                 int position = 0;
                 while (position < input.Length)
@@ -353,8 +364,36 @@ namespace laba1
 
                     if (found) continue;
 
-                    //letter
-                    if (char.IsLetter(input[position]))
+                //(
+                foreach (string op in skobaopens)
+                {
+                    if (input.Substring(position).StartsWith(op))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.SkobaOpen], LexemeType.SkobaOpen, input, position, position + op.Length - 1));
+                        position += op.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //)
+                foreach (string op in skobacloses)
+                {
+                    if (input.Substring(position).StartsWith(op))
+                    {
+                        lexemes.Add(new Lexeme(lexemeCodes[LexemeType.SkobaClose], LexemeType.SkobaClose, input, position, position + op.Length - 1));
+                        position += op.Length;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) continue;
+
+                //letter
+                if (char.IsLetter(input[position]))
                     {
                         int start = position;
                         while (position < input.Length && char.IsLetter(input[position]))
@@ -377,9 +416,10 @@ namespace laba1
                 label1.Text = "Кол-во ошибок: ";
                 dataGridView1.Rows.Clear();//*
                 dataGridView2.Rows.Clear();//*
-                richTextBox1.Text = "";
+            dataGridView3.Rows.Clear();//*
+                                       //richTextBox1.Text = "";
 
-                foreach (Lexeme lexeme in lexemes)
+            foreach (Lexeme lexeme in lexemes)
                 {
                     dataGridView1.Rows.Add(lexeme.Code, lexeme.Type, lexeme.Token, lexeme.StartPosition, lexeme.EndPosition);
                 }
@@ -387,14 +427,40 @@ namespace laba1
                 Parser parser = new Parser(lexemes);
                 parser.Parse(dataGridView2);//*b
 
-                label1.Text += parser.counter;
+                
 
-                if (parser.counter == 0)
+            if (parser.countSkobaOpen!=parser.countSkobaClose)
+            {
+                parser.counter++;
+                dataGridView2.Rows.Add($"Лишняя или недостающая скобка");
+            }
+
+            label1.Text += parser.counter;
+
+            if (parser.counter == 0)
                 {
                     dataGridView2.Rows.Add("Ошибок нет");//*
-                    parser.tetrada(richTextBox1);
+                    parser.tetrada(dataGridView3);
+
+                for (int u = 0; u < parser.table.Count; u++)
+                {
+                    //richTextBox1.Text += $"{table[u].num}\t{table[u].op}\t{table[u].arg1}\t{table[u].arg2}\t{table[u].result}\n";
+
+                    dataGridView3.Rows.Add(parser.table[u].num, parser.table[u].op, parser.table[u].arg1, parser.table[u].arg2, parser.table[u].result);
 
                 }
+
+                dataGridView3.Visible = true;
+                //label1.Visible = false;
+                dataGridView2.Visible = false;
+            }
+            else
+            {
+                dataGridView3.Visible = false;
+                //label1.Visible = true;
+                dataGridView2.Visible = true;
+
+            }
 
 
             
