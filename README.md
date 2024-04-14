@@ -19,6 +19,7 @@ k=(-g-(-f+-d)*-c)/-c+e;<br>
 
 
 ## Тестовые примеры
+
 <img src="ex1.png" width=350px>
 <img src="ex2.png" width=350px>
 <img src="ex3.png" width=350px>
