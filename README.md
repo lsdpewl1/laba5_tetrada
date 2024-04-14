@@ -8,9 +8,15 @@
 ## Задание: Реализовать алгоритм записи арифметического выражения в виде тетрады.
 
 ## Примеры верных строк
+<<<<<<< HEAD
 a=b*-c+b*c;<br>
 a=-g+a*h+-s/r;<br>
 k=-g--f+-d*-c/-c+e;<br>
+=======
+a=b*-(c+b)*c;<br>
+a=-(g+a)*(h+-s)/r;<br>
+k=(-g-(-f+-d)*-c)/-c+e;<br>
+>>>>>>> e890b5363b7c3874d599d9edebc4a2930ee48994
 
 ## Тестовые примеры
 <img src="ex1.png">
@@ -19,6 +25,7 @@ k=-g--f+-d*-c/-c+e;<br>
 <img src="ex4.png">
 <img src="ex5.png">
 <img src="ex6.png">
+<<<<<<< HEAD
 
 <img src="ex7.png">
 <img src="ex8.png">
@@ -26,3 +33,5 @@ k=-g--f+-d*-c/-c+e;<br>
 <img src="ex10.png">
 <img src="ex11.png">
 <img src="ex12.png">
+=======
+>>>>>>> e890b5363b7c3874d599d9edebc4a2930ee48994
